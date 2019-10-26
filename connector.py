@@ -1,11 +1,3 @@
-from cli import menu
-from protocol import protocol
+from cli import menu_cli
 
-options = []
-for p in protocol.Protocol:
-    options.append(
-        menu.Option(p.name, p.value, action=protocol.action(p)))
-
-print("Welcome to connector. Choose protocol:")
-menu.show_options(options)
-menu.choose(options, input())
+menu_cli.show()
