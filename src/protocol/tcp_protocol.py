@@ -11,7 +11,7 @@ def execute(ip, port, rate, data, timeout=3000):
         interval = 1.0 / rate
         while True:
             data = send(s, formatted)
-            print('Received: ', str(data))
+            print(f'Received: {data}')
             if rate == 0:
                 break
             time.sleep(interval)
@@ -19,4 +19,4 @@ def execute(ip, port, rate, data, timeout=3000):
 
 def send(s, data):
     s.sendall(data)
-    return s.recv(1024)
+    return s.recv(1024).decode('utf8')
