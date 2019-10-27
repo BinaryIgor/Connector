@@ -1,4 +1,5 @@
 from src.presenter.presenter_response import PresenterResponse
+from src.protocol import tcp_protocol
 
 
 # TODO: validations
@@ -8,11 +9,15 @@ def get_ip(ip):
 
 
 def get_port(port):
-    return PresenterResponse(data=port)
+    return PresenterResponse(data=int(port))
 
 
 def get_timeout(timeout):
-    return PresenterResponse(data=timeout)
+    return PresenterResponse(data=int(timeout))
+
+
+def get_rate(rate):
+    return PresenterResponse(data=rate)
 
 
 def collect_data():
@@ -27,5 +32,5 @@ def collect_data():
         return PresenterResponse(error="Data can't be empty.")
 
 
-def execute_tcp_request(ip, port, timeout, data):
-    print(f'{ip}, {port}, {timeout}, {data}')
+def execute_tcp_request(ip, port, rate, data, timeout):
+    tcp_protocol.execute(ip, port, rate, data, timeout=timeout)
