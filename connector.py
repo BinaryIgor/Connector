@@ -1,3 +1,3 @@
-from cli import menu_cli
+from src.cli import menu_cli
 
 menu_cli.show()

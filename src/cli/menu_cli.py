@@ -1,5 +1,5 @@
-from cli import http_cli
-from protocol.protocol import Protocol
+from src.cli import http_cli
+from src.protocol.protocol import Protocol
 
 NOT_IMPLEMENTED = 'Not implemented yet'
 QUIT = 'q'

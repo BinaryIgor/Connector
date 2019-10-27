@@ -1,6 +1,6 @@
-from presenter.presenter_response import PresenterResponse
-from validation import validation
-from protocol import http_protocol
+from src.presenter.presenter_response import PresenterResponse
+from src.validation import validation
+from src.protocol import http_protocol
 
 
 class ResponseViewModel:
