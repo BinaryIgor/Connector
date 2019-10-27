@@ -1,4 +1,4 @@
-from src.cli import http_cli
+from src.cli import http_cli, tcp_cli
 from src.protocol.protocol import Protocol
 
 NOT_IMPLEMENTED = 'Not implemented yet'
@@ -38,7 +38,7 @@ def _protocol_action(protocol):
     if protocol == Protocol.UDP:
         return lambda: print(NOT_IMPLEMENTED)
     elif protocol == Protocol.TCP:
-        return lambda: print(NOT_IMPLEMENTED)
+        return tcp_cli.show
     elif protocol == Protocol.HTTP:
         return http_cli.show
     else:
