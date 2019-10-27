@@ -17,7 +17,7 @@ def get_timeout(timeout):
 
 
 def get_rate(rate):
-    return PresenterResponse(data=rate)
+    return PresenterResponse(data=int(rate))
 
 
 def collect_data():
