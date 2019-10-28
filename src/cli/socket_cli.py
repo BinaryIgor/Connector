@@ -3,17 +3,7 @@ from src.input.smart_input import smart_input
 
 
 def show(udp=False):
-    config = _collect_config()
-    print()
-    if config.rate > 0:
-        print('Listening to responses, press enter to stop.')
-    else:
-        print('Received response:')
-    if udp:
-        socket_presenter.execute_udp_request(config)
-    else:
-        socket_presenter.execute_tcp_request(config)
-    print()
+    _execute(_collect_config(), udp)
 
 
 def _collect_config():
@@ -52,3 +42,28 @@ def _collect_config():
                                                 data_consumer=lambda x: print(
                                                     str(x)),
                                                 interruption=lambda: smart_input())
+
+
+def _execute(config, udp):
+    if config.rate > 0:
+        print('Listening to responses, press enter to stop.')
+    else:
+        print('Received response:')
+    if udp:
+        socket_presenter.execute_udp_request(config)
+    else:
+        socket_presenter.execute_tcp_request(config)
+    _repeat_or_exit(config, udp)
+
+
+def _repeat_or_exit(config, udp):
+    print()
+    repeat = smart_input('Change data and keep sending?(y/n): ')
+    print()
+    if repeat.lower() == 'y':
+        data_response = socket_presenter.collect_data(smart_input)
+        while not data_response.valid:
+            print(data_response.error)
+            data_response = socket_presenter.collect_data(smart_input)
+        config.data = data_response.data
+        _execute(config, udp)
