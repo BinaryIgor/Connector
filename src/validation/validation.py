@@ -27,6 +27,6 @@ def is_valid_port(port):
 
 def is_positive_number(number):
     try:
-        return int(number) >= 0
+        return float(number) >= 0
     except Exception:
         return False

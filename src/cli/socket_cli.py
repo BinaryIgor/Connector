@@ -1,9 +1,19 @@
-from src.presenter import udp_presenter, socket_presenter
+from src.presenter import socket_presenter
 from src.input.smart_input import smart_input
 
 
-def show():
-    _collect_config()
+def show(udp=False):
+    config = _collect_config()
+    print()
+    if config.rate > 0:
+        print('Listening to responses, press enter to stop.')
+    else:
+        print('Received response:')
+    if udp:
+        socket_presenter.execute_udp_request(config)
+    else:
+        socket_presenter.execute_tcp_request(config)
+    print()
 
 
 def _collect_config():
@@ -15,12 +25,6 @@ def _collect_config():
     port_response = socket_presenter.get_port(smart_input("Port: "))
     while not port_response.valid:
         port_response = socket_presenter.get_port(
-            smart_input(f'{port_response.error}: '))
-
-    src_port_response = socket_presenter.get_port(
-        smart_input("Listener port: "))
-    while not src_port_response.valid:
-        src_port_response = socket_presenter.get_port(
             smart_input(f'{port_response.error}: '))
 
     timeout_response = socket_presenter.get_timeout(smart_input(
@@ -39,3 +43,12 @@ def _collect_config():
     while not data_response.valid:
         print(data_response.error)
         data_response = socket_presenter.collect_data(smart_input)
+
+    return socket_presenter.SocketRequestConfig(ip_response.data,
+                                                port_response.data,
+                                                rate_response.data,
+                                                data_response.data,
+                                                timeout=timeout_response.data,
+                                                data_consumer=lambda x: print(
+                                                    str(x)),
+                                                interruption=lambda: smart_input())

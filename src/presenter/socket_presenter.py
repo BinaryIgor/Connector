@@ -1,7 +1,29 @@
+import threading
 from src.presenter.presenter_response import PresenterResponse
+from src.protocol import protocol, tcp_protocol, udp_protocol
 from src.validation import validation
 
-DEFAULT_TIMEOUT = 3000
+DEFAULT_TIMEOUT = 3
+
+
+class SocketRequestConfig:
+
+    def __init__(self, ip, port, rate, data,
+                 data_consumer, timeout=DEFAULT_TIMEOUT,
+                 interruption=lambda: input()):
+        self.ip = ip
+        self.port = port
+        self.rate = rate
+        self.data = data
+        self.timeout = timeout
+        self.data_consumer = data_consumer
+        self.interruption = interruption
+
+    def to_protocol_config(self, sending_predicate):
+        return protocol.SocketRequestConfig(self.ip, self.port, self.rate,
+                                            self.data, self.timeout,
+                                            self.data_consumer,
+                                            sending_predicate)
 
 
 def get_ip(ip):
@@ -24,14 +46,14 @@ def get_timeout(timeout):
     if not timeout:
         return PresenterResponse(data=DEFAULT_TIMEOUT)
     if validation.is_positive_number(timeout):
-        return PresenterResponse(data=int(timeout))
+        return PresenterResponse(data=float(timeout))
     else:
         return PresenterResponse(error='Timeout must be a positive number')
 
 
 def get_rate(rate):
     if validation.is_positive_number(rate):
-        return PresenterResponse(data=int(rate))
+        return PresenterResponse(data=float(rate))
     else:
         return PresenterResponse(error='Rate must be a positive number')
 
@@ -46,3 +68,30 @@ def collect_data(input_collector):
         return PresenterResponse(data='\n'.join(data))
     else:
         return PresenterResponse(error="Data can't be empty.")
+
+
+def execute_tcp_request(config: SocketRequestConfig):
+    _execute_request(config, udp=False)
+
+
+def execute_udp_request(config: SocketRequestConfig):
+    _execute_request(config, udp=True)
+
+
+def _execute_request(config: SocketRequestConfig, udp=False):
+    keep_sending_flag = True
+
+    def keep_sending():
+        nonlocal keep_sending_flag
+        return keep_sending_flag
+
+    thread = threading.Thread(
+        target=udp_protocol.execute if udp else tcp_protocol.execute,
+        args=[config.to_protocol_config(keep_sending)],
+        daemon=True)
+    thread.start()
+    if config.rate > 0:
+        _ = config.interruption()
+    else:
+        thread.join()
+    keep_sending_flag = False

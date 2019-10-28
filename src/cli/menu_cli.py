@@ -1,4 +1,4 @@
-from src.cli import http_cli, tcp_cli, udp_cli
+from src.cli import http_cli, socket_cli
 from src.protocol.protocol import Protocol
 from src.input import smart_input
 import sys
@@ -53,9 +53,9 @@ def close():
 
 def _protocol_action(protocol):
     if protocol == Protocol.UDP:
-        return udp_cli.show
+        return lambda: socket_cli.show(udp=True)
     elif protocol == Protocol.TCP:
-        return tcp_cli.show
+        return lambda: socket_cli.show(udp=False)
     elif protocol == Protocol.HTTP:
         return http_cli.show
     else:
