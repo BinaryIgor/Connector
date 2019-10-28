@@ -1,21 +1,21 @@
 from src.presenter import http_presenter
-from src.input.smart_input import input_or_quit
+from src.input.smart_input import smart_input
 
 
 def show():
-    url_response = http_presenter.get_url(input_or_quit('Url: '))
+    url_response = http_presenter.get_url(smart_input('Url: '))
 
     while not url_response.valid:
         url_response = http_presenter.get_url(
-            input_or_quit(f'{url_response.error}: '))
+            smart_input(f'{url_response.error}: '))
 
-    headers = http_presenter.collect_headers(input_or_quit)
+    headers = http_presenter.collect_headers(smart_input)
 
-    method_response = http_presenter.get_method(input_or_quit('Method: '))
+    method_response = http_presenter.get_method(smart_input('Method: '))
     while not method_response.valid:
         method_response = http_presenter.get_method(
-            input_or_quit(f'{method_response.error}: '))
-    body = input_or_quit('Body(o): ')
+            smart_input(f'{method_response.error}: '))
+    body = smart_input('Body(o): ')
     response = http_presenter.execute_request(url_response.data,
                                               method_response.data,
                                               headers, body)

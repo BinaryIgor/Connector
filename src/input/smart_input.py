@@ -1,8 +1,14 @@
-import sys
+_input_functions = {}
 
 
-def input_or_quit(prompt='', q='q'):
+def configure(input_functions):
+    for i in input_functions:
+        _input_functions[i] = input_functions[i]
+
+
+def smart_input(prompt=''):
     result = input(prompt)
-    if result.lower() == q.lower():
-        sys.exit(0)
+    for i in _input_functions:
+        if i.lower() == result.lower():
+            _input_functions[i]()
     return result

@@ -5,11 +5,12 @@ import signal
 
 
 def signal_handler(sig, frame):
-    sys.exit(0)
+    menu_cli.close()
 
 
 try:
     signal.signal(signal.SIGINT, signal_handler)
+    menu_cli.setup()
     menu_cli.show()
 except KeyboardInterrupt:
     print(traceback.format_exc())

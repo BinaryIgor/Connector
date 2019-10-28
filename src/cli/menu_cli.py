@@ -1,5 +1,7 @@
 from src.cli import http_cli, tcp_cli
 from src.protocol.protocol import Protocol
+from src.input import smart_input
+import sys
 
 NOT_IMPLEMENTED = 'Not implemented yet'
 QUIT = 'q'
@@ -17,22 +19,36 @@ class Option:
             self._action()
 
 
+def setup():
+    smart_input.configure({
+        'q': close,
+        'm': show
+    })
+
+
 def show():
     options = []
     for p in Protocol:
         options.append(Option(p.name, p.value,
                               action=_protocol_action(p)))
 
-    print('Welcome to connector.',
-          'Press q to quit, press enter to skip any optional(o) input.')
+    print('Welcome to connector.')
+    print('Press q to quit, m to go back to menu,',
+          'enter to skip any optional(o) input.')
+    print('Have pleasurable connecting!')
+    print()
     next_option = True
     while next_option:
         print('Choose protocol:')
         _show_options(options)
-        option = input()
-        if option.lower() == 'q':
-            break
+        option = smart_input.smart_input()
         next_option = _choose(options, option)
+
+
+def close():
+    print()
+    print('Stay connected.')
+    sys.exit(0)
 
 
 def _protocol_action(protocol):
@@ -56,7 +72,6 @@ def _choose(options, option):
         return False
     executed = False
     for o in options:
-        print(o.value)
         if str(o.value) == option:
             o.execute()
             executed = True
