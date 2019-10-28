@@ -21,10 +21,13 @@ def show():
                                               headers, body)
     print()
     print("Received response:")
+    print()
     print(f'{response.status_code}')
+    print()
     print('Headers:')
     for h in response.headers:
         print(h)
+    print()
     print('Body:')
     print(response.body)
     print()

@@ -21,8 +21,8 @@ class Option:
 
 def setup():
     smart_input.configure({
-        'q': close,
-        'm': show
+        ':q': close,
+        ':m': show
     })
 
 
@@ -33,7 +33,7 @@ def show():
                               action=_protocol_action(p)))
 
     print('Welcome to connector.')
-    print('Press q to quit, m to go back to menu,',
+    print('Press :q to quit, :m to go back to menu,',
           'enter to skip any optional(o) input.')
     print('Have pleasurable connecting!')
     print()

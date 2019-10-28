@@ -13,5 +13,6 @@ try:
     menu_cli.setup()
     menu_cli.show()
 except KeyboardInterrupt:
-    print(traceback.format_exc())
     sys.exit()
+except Exception:
+    print(traceback.format_exc())
