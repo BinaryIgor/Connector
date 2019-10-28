@@ -42,3 +42,12 @@ class TestValidation(unittest.TestCase):
 
     def test_invalidates_negative_number_case2(self):
         self.assertFalse(validation.is_positive_number('abc'))
+
+    def test_validates_binary(self):
+        self.assertTrue(validation.is_valid_binary('101010001'))
+
+    def test_invalidates_binary_case1(self):
+        self.assertFalse(validation.is_valid_binary('101010001ab'))
+
+    def test_invalidates_binary_case2(self):
+        self.assertFalse(validation.is_valid_binary('a2bd'))

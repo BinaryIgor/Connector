@@ -30,3 +30,10 @@ def is_positive_number(number):
         return float(number) >= 0
     except Exception:
         return False
+
+
+def is_valid_binary(data):
+    for d in data:
+        if d != '1' and d != '0':
+            return False
+    return True
