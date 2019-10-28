@@ -5,18 +5,29 @@ BUFFER = 1024
 ENCODING = "utf8"
 
 
-def execute(ip, port, rate, data, timeout=3000, keep_sending=lambda: True,
-            data_consumer=None):
+class TcpRequestConfig:
+
+    def __init__(self, ip, port, rate, data,
+                 timeout, data_consumer, sending_predicate):
+        self.ip = ip
+        self.port = port
+        self.rate = rate
+        self.data = data
+        self.timeout = timeout
+        self.data_consumer = data_consumer
+        self.sending_predicate = sending_predicate
+
+
+def execute(config: TcpRequestConfig):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.settimeout(timeout)
-        s.connect((ip, port))
-        formatted = bytes(data, encoding=ENCODING)
-        interval = 1.0 / rate
-        while keep_sending():
+        s.settimeout(config.timeout)
+        s.connect((config.ip, config.port))
+        formatted = bytes(config.data, encoding=ENCODING)
+        interval = 1.0 / config.rate if config.rate > 0 else 0
+        while config.sending_predicate():
             data = send(s, formatted)
-            if data_consumer:
-                data_consumer(data)
-            if rate == 0:
+            config.data_consumer(data)
+            if interval == 0:
                 break
             time.sleep(interval)
 
