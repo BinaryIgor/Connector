@@ -23,15 +23,19 @@ def show():
         options.append(Option(p.name, p.value,
                               action=_protocol_action(p)))
 
-    print("Welcome to connector. Choose protocol or press q to quit:")
+    print('Welcome to connector.',
+          'Press q to quit, press enter to skip any optional input.')
+    print('Choose protocol:')
     next_option = True
     while next_option:
         _show_options(options)
         option = input()
         if option.lower() == 'q':
             break
-        _choose(options, option)
-        next_option = input("Continue?(y/n)").lower() == 'y'
+        if _choose(options, option):
+            next_option = input("Continue?(y/n)").lower() == 'y'
+        else:
+            next_option = True
 
 
 def _protocol_action(protocol):
@@ -52,7 +56,7 @@ def _show_options(options):
 
 def _choose(options, option):
     if option == QUIT:
-        return
+        return True
     executed = False
     for o in options:
         print(o.value)
@@ -61,4 +65,5 @@ def _choose(options, option):
             executed = True
             break
     if not executed:
-        print('Choose proper option. {} is unknown'.format(option))
+        print(f'Choose proper option. {option} is unknown')
+    return executed
