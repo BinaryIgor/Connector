@@ -19,16 +19,16 @@ def get_url(url):
     return response
 
 
-def collect_headers():
+def collect_headers(input_collector):
     headers = {}
-    header = input('Header: ')
+    header = input_collector('Header(o): ')
     while header:
         if validation.is_valid_header(header):
             h = header.split(':')
             headers[h[0]] = h[1]
-            header = input('Next header: ')
+            header = input_collector('Next header(o): ')
         else:
-            header = input('Invalid header. Try again: ')
+            header = input_collector('Invalid header. Try again(o): ')
     return headers
 
 
