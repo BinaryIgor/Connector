@@ -3,9 +3,6 @@ from src.protocol.protocol import Protocol
 from src.input import smart_input
 import sys
 
-NOT_IMPLEMENTED = 'Not implemented yet'
-QUIT = 'q'
-
 
 class Option:
 
@@ -37,12 +34,11 @@ def show():
           'enter to skip any optional(o) input.')
     print('Have pleasurable connecting!')
     print()
-    next_option = True
-    while next_option:
+    while True:
         print('Choose protocol:')
         _show_options(options)
         option = smart_input.smart_input()
-        next_option = _choose(options, option)
+        _choose(options, option)
 
 
 def close():
@@ -68,8 +64,6 @@ def _show_options(options):
 
 
 def _choose(options, option):
-    if option == QUIT:
-        return False
     executed = False
     for o in options:
         if str(o.value) == option:
@@ -77,5 +71,5 @@ def _choose(options, option):
             executed = True
             break
     if not executed:
+        print()
         print(f'Choose proper option. {option} is unknown')
-    return True
