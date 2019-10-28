@@ -10,7 +10,8 @@ class SocketRequestConfig:
 
     def __init__(self, ip, port, rate, data,
                  data_consumer, timeout=DEFAULT_TIMEOUT,
-                 interruption=lambda: input()):
+                 interruption=lambda: input(),
+                 src_port=None):
         self.ip = ip
         self.port = port
         self.rate = rate
@@ -18,12 +19,14 @@ class SocketRequestConfig:
         self.timeout = timeout
         self.data_consumer = data_consumer
         self.interruption = interruption
+        self.src_port = src_port
 
     def to_protocol_config(self, sending_predicate):
         return protocol.SocketRequestConfig(self.ip, self.port, self.rate,
                                             self.data, self.timeout,
                                             self.data_consumer,
-                                            sending_predicate)
+                                            sending_predicate,
+                                            src_port=self.src_port)
 
 
 def get_ip(ip):

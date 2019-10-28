@@ -3,10 +3,10 @@ from src.input.smart_input import smart_input
 
 
 def show(udp=False):
-    _execute(_collect_config(), udp)
+    _execute(_collect_config(udp), udp)
 
 
-def _collect_config():
+def _collect_config(udp):
     ip_response = socket_presenter.get_ip(smart_input("Ip: "))
     while not ip_response.valid:
         ip_response = socket_presenter.get_ip(
@@ -16,6 +16,13 @@ def _collect_config():
     while not port_response.valid:
         port_response = socket_presenter.get_port(
             smart_input(f'{port_response.error}: '))
+
+    if udp:
+        src_port_response = socket_presenter.get_port(
+            smart_input("Source port(o, default random): "))
+        src_port = src_port_response.data if src_port_response.valid else None
+    else:
+        src_port = None
 
     timeout_response = socket_presenter.get_timeout(smart_input(
         f'Timeout(o, default: {socket_presenter.DEFAULT_TIMEOUT}): '))
@@ -41,7 +48,8 @@ def _collect_config():
                                                 timeout=timeout_response.data,
                                                 data_consumer=lambda x: print(
                                                     str(x)),
-                                                interruption=lambda: smart_input())
+                                                interruption=lambda: smart_input(),
+                                                src_port=src_port)
 
 
 def _execute(config, udp):

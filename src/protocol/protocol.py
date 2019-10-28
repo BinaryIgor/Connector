@@ -10,7 +10,7 @@ class Protocol(Enum):
 class SocketRequestConfig:
 
     def __init__(self, ip, port, rate, data,
-                 timeout, data_consumer, sending_predicate):
+                 timeout, data_consumer, sending_predicate, src_port=None):
         self.ip = ip
         self.port = port
         self.rate = rate
@@ -18,3 +18,4 @@ class SocketRequestConfig:
         self.timeout = timeout
         self.data_consumer = data_consumer
         self.sending_predicate = sending_predicate
+        self.src_port = src_port
