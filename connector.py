@@ -5,6 +5,7 @@ import signal
 
 
 def signal_handler(sig, frame):
+    print('Bye!')
     sys.exit(0)
 
 

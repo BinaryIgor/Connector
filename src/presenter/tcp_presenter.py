@@ -1,5 +1,6 @@
 from src.presenter.presenter_response import PresenterResponse
 from src.protocol import tcp_protocol
+import threading
 
 
 # TODO: validations
@@ -33,4 +34,22 @@ def collect_data():
 
 
 def execute_tcp_request(ip, port, rate, data, timeout):
-    tcp_protocol.execute(ip, port, rate, data, timeout=timeout)
+    keep_sending_flag = True
+
+    def keep_sending():
+        nonlocal keep_sending_flag
+        return keep_sending_flag
+
+    def print_next(r_data):
+        print(f'Received: {r_data}')
+
+    thread = threading.Thread(target=tcp_protocol.execute,
+                              args=(ip, port, rate, data),
+                              kwargs={'timeout': timeout,
+                                      'keep_sending': keep_sending,
+                                      'data_consumer': print_next},
+                              daemon=True)
+    print('Press enter to stop.')
+    thread.start()
+    _ = input()
+    keep_sending_flag = False
