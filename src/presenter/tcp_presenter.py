@@ -25,11 +25,10 @@ def execute_tcp_request(config: TcpRequestConfig):
         nonlocal keep_sending_flag
         return keep_sending_flag
 
-    args = (config.ip, config.port, config.rate, config.data)
+    args = (config.ip, config.port, config.rate, config.data, config.timeout)
     thread = threading.Thread(target=tcp_protocol.execute,
                               args=args,
-                              kwargs={'timeout': config.timeout,
-                                      'keep_sending': keep_sending,
+                              kwargs={'keep_sending': keep_sending,
                                       'data_consumer': config.data_consumer},
                               daemon=True)
     thread.start()

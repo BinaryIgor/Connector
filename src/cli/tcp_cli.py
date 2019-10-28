@@ -33,7 +33,8 @@ def _collect_config():
     rate_response = socket_presenter.get_rate(
         smart_input("Rate(or 0 if data should be send once):"))
     while not rate_response.valid:
-        rate_response = socket_presenter.get_rate(f'{rate_response.error}: ')
+        rate_response = socket_presenter.get_rate(
+            smart_input(f'{rate_response.error}: '))
 
     data_response = socket_presenter.collect_data(smart_input)
     while not data_response.valid:

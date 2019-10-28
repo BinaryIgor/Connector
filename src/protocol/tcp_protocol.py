@@ -1,7 +1,7 @@
 import socket
 import time
 
-BUFFER_SIZE = 1024
+BUFFER = 1024
 ENCODING = "utf8"
 
 
@@ -11,16 +11,16 @@ def execute(ip, port, rate, data, timeout=3000, keep_sending=lambda: True,
         s.settimeout(timeout)
         s.connect((ip, port))
         formatted = bytes(data, encoding=ENCODING)
-        interval = 1.0 / rate if rate > 0 else 0
+        interval = 1.0 / rate
         while keep_sending():
             data = send(s, formatted)
             if data_consumer:
                 data_consumer(data)
-            if interval == 0:
+            if rate == 0:
                 break
             time.sleep(interval)
 
 
 def send(s, data):
     s.sendall(data)
-    return s.recv(BUFFER_SIZE).decode(ENCODING)
+    return s.recv(BUFFER).decode(ENCODING)
