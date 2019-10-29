@@ -38,7 +38,9 @@ class DataWithFormat:
     def as_binary_bytes(self):
         binary = self._prepare_binary()
 
-        if not is_valid_binary(binary):
+        if not binary:
+            raise Exception('Empty binary data')
+        elif not is_valid_binary(binary):
             raise Exception(f'{binary} is not a valid binary number')
 
         bytes_array = []

@@ -43,7 +43,7 @@ def _collect_config(udp):
         data_response = socket_presenter.collect_data(smart_input)
 
     def data_consumer(x):
-        print()
+        print('***')
         print(str(x))
 
     return socket_presenter.SocketRequestConfig(ip_response.data,

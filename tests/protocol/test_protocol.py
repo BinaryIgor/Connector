@@ -27,6 +27,15 @@ class TestProtocol(unittest.TestCase):
     def test_returns_binary_even_bytes(self):
         self._returns_binary_bytes('10101000', '10101111')
 
+    def test_raises_exception_on_empty_binary_bytes(self):
+        msg = ''
+        try:
+            DataWithFormat(BINARY_FORMAT_PREFIX).as_binary_bytes()
+        except Exception as e:
+            msg = str(e)
+
+        self.assertEqual(msg, 'Empty binary data')
+
     def test_returns_formatted_bytes(self):
         data = bytes([1, 4])
         self.assertEqual(format_bytes(data), '100000100')

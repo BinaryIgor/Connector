@@ -51,11 +51,6 @@ def _print_shortcuts():
           'enter to skip any optional(o) input.')
 
 
-def _repeat_last_option(last_option):
-    return last_option and smart_input.smart_input(
-        'Change protocol?(y/n): ').lower() != 'y'
-
-
 def close():
     print()
     print('Stay connected.')
@@ -70,7 +65,7 @@ def _protocol_action(protocol):
     elif protocol == Protocol.HTTP:
         return http_cli.show
     else:
-        return lambda: print("{} isn't a proper protocol".format(protocol))
+        return lambda: print("{} isn't a proper protocol.".format(protocol))
 
 
 def _show_options(options):
@@ -85,5 +80,5 @@ def _choose(options, option):
             o.execute()
             return o
     print()
-    print(f'Choose proper option. {option} is unknown')
+    print(f'Choose proper option. {option} is unknown.')
     return None
