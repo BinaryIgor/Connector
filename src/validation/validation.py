@@ -1,5 +1,12 @@
 MIN_PORT = 0
 MAX_PORT = 65_535
+HTTP_PREFIX = 'http://'
+HTTPS_PREFIX = 'https://'
+
+
+def is_valid_http_url(url):
+    return (url.find(HTTP_PREFIX) == 0 and len(url) > len(HTTP_PREFIX)) or \
+           (url.find(HTTPS_PREFIX) == 0 and len(url) > len(HTTPS_PREFIX))
 
 
 def is_valid_header(header):

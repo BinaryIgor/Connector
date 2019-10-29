@@ -11,7 +11,7 @@ class ResponseViewModel:
 
 
 def get_url(url):
-    if url.find('http') == 0 or url.find('https') == 0:
+    if validation.is_valid_http_url(url):
         response = PresenterResponse(data=url)
     else:
         response = PresenterResponse(
