@@ -10,5 +10,11 @@ def smart_input(prompt=''):
     result = input(prompt)
     for i in _input_functions:
         if i.lower() == result.lower():
-            _input_functions[i]()
+            raise SmartException(_input_functions[i])
     return result
+
+
+class SmartException(Exception):
+
+    def __init__(self, to_execute):
+        self.to_execute = to_execute

@@ -13,5 +13,5 @@ try:
     menu_cli.show()
 except KeyboardInterrupt:
     sys.exit()
-except Exception or BaseException as e:
+except Exception as e:
     error_cli.handle_error(e)

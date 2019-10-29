@@ -34,6 +34,7 @@ def show():
           'enter to skip any optional(o) input.')
     print('Have pleasurable connecting!')
     print()
+
     while True:
         print('Choose protocol:')
         _show_options(options)

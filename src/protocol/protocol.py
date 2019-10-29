@@ -46,7 +46,6 @@ class DataWithFormat:
 
         if bs_len < 8:
             bytes_array.append(int(binary, 2))
-            print(bytes_array)
             return bytes(bytes_array)
 
         segments = math.floor(bs_len / 8.0)

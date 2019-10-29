@@ -32,7 +32,7 @@ def _collect_config(udp):
             smart_input(f'{timeout_response.error}: '))
 
     rate_response = socket_presenter.get_rate(
-        smart_input("Rate(or 0 if data should be send once):"))
+        smart_input("Rate(or 0 if data should be send once): "))
     while not rate_response.valid:
         rate_response = socket_presenter.get_rate(
             smart_input(f'{rate_response.error}: '))
@@ -58,10 +58,15 @@ def _execute(config, udp):
         print('Listening to responses, press enter to stop.')
     else:
         print('Received response:')
+
+    def error_handler(error):
+        error_cli.handle_error(error, restart=False)
+
     if udp:
-        socket_presenter.execute_udp_request(config, error_cli.handle_error)
+        socket_presenter.execute_udp_request(config, error_handler)
     else:
-        socket_presenter.execute_tcp_request(config, error_cli.handle_error)
+        socket_presenter.execute_tcp_request(config, error_handler)
+
     _repeat_or_exit(config, udp)
 
 
