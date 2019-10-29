@@ -109,7 +109,7 @@ def _catching_func(func, on_error):
     def logging_func(f, x):
         try:
             f(x)
-        except Exception or BaseException as e:
+        except BaseException as e:
             on_error(e)
 
     return lambda x: logging_func(func, x)

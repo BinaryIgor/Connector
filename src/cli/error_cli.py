@@ -4,7 +4,6 @@ from src.input.smart_input import SmartException
 
 
 def handle_error(error, restart=True):
-    print()
     try:
         if isinstance(error, SmartException):
             error.to_execute()

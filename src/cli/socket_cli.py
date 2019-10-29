@@ -42,13 +42,16 @@ def _collect_config(udp):
         print(data_response.error)
         data_response = socket_presenter.collect_data(smart_input)
 
+    def data_consumer(x):
+        print()
+        print(str(x))
+
     return socket_presenter.SocketRequestConfig(ip_response.data,
                                                 port_response.data,
                                                 rate_response.data,
                                                 data_response.data,
                                                 timeout=timeout_response.data,
-                                                data_consumer=lambda x: print(
-                                                    str(x)),
+                                                data_consumer=data_consumer,
                                                 interruption=lambda: smart_input(),
                                                 src_port=src_port)
 

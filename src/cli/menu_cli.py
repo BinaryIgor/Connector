@@ -30,16 +30,30 @@ def show():
                               action=_protocol_action(p)))
 
     print('Welcome to connector.')
-    print('Press :q to quit, :m to go back to menu,',
-          'enter to skip any optional(o) input.')
-    print('Have pleasurable connecting!')
+    _print_shortcuts()
     print()
 
+    last_option = None
     while True:
-        print('Choose protocol:')
-        _show_options(options)
-        option = smart_input.smart_input()
-        _choose(options, option)
+        if last_option:
+            _print_shortcuts()
+            print()
+            print(f'{last_option.key}')
+            last_option.execute()
+        else:
+            _show_options(options)
+            last_option = _choose(options,
+                                  smart_input.smart_input('Choose protocol: '))
+
+
+def _print_shortcuts():
+    print('Press :q to quit, :m to go back to menu,',
+          'enter to skip any optional(o) input.')
+
+
+def _repeat_last_option(last_option):
+    return last_option and smart_input.smart_input(
+        'Change protocol?(y/n): ').lower() != 'y'
 
 
 def close():
@@ -56,21 +70,20 @@ def _protocol_action(protocol):
     elif protocol == Protocol.HTTP:
         return http_cli.show
     else:
-        return lambda: print("{} isn't proper protocol".format(protocol))
+        return lambda: print("{} isn't a proper protocol".format(protocol))
 
 
 def _show_options(options):
     print('\n'.join(
-        [str(o.key) + ' - ' + str(o.value) for o in options]))
+        [str(o.value) + ' - ' + str(o.key) for o in options]))
 
 
 def _choose(options, option):
-    executed = False
     for o in options:
         if str(o.value) == option:
+            print()
             o.execute()
-            executed = True
-            break
-    if not executed:
-        print()
-        print(f'Choose proper option. {option} is unknown')
+            return o
+    print()
+    print(f'Choose proper option. {option} is unknown')
+    return None

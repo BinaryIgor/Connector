@@ -1,5 +1,5 @@
 # Connector
-Tool for using network protocols.
+Simple cli tool for using network protocols.
 
 ## Usage
 ```
