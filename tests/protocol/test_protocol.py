@@ -1,10 +1,11 @@
 import unittest
-from src.protocol.protocol import DataWithFormat, BINARY_FORMAT_PREFIX
+from src.protocol.protocol import DataWithFormat, BINARY_FORMAT_PREFIX, \
+    format_bytes
 
 ENCODING = "utf8"
 
 
-class TestDataWithFormat(unittest.TestCase):
+class TestProtocol(unittest.TestCase):
 
     def test_returns_text_bytes(self):
         text = 'abc'
@@ -25,3 +26,7 @@ class TestDataWithFormat(unittest.TestCase):
 
     def test_returns_binary_even_bytes(self):
         self._returns_binary_bytes('10101000', '10101111')
+
+    def test_returns_formatted_bytes(self):
+        data = bytes([1, 4])
+        self.assertEqual(format_bytes(data), '100000100')

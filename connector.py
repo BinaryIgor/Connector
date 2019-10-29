@@ -14,5 +14,6 @@ try:
     menu_cli.show()
 except KeyboardInterrupt:
     sys.exit()
-except Exception:
-    print(traceback.format_exc())
+except Exception as e:
+    print("Something went wrong...")
+    print(e)

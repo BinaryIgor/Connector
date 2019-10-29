@@ -1,6 +1,6 @@
 import threading
 from src.presenter.presenter_response import PresenterResponse
-from src.protocol import protocol, tcp_protocol, udp_protocol
+from src.protocol import protocol, socket_protocol
 from src.validation import validation
 
 DEFAULT_TIMEOUT = 3
@@ -23,7 +23,8 @@ class SocketRequestConfig:
 
     def to_protocol_config(self, sending_predicate):
         return protocol.SocketRequestConfig(self.ip, self.port, self.rate,
-                                            self.data, self.timeout,
+                                            protocol.DataWithFormat(self.data),
+                                            self.timeout,
                                             self.data_consumer,
                                             sending_predicate,
                                             src_port=self.src_port)
@@ -63,7 +64,8 @@ def get_rate(rate):
 
 def collect_data(input_collector):
     data = []
-    part = input_collector("Data line: ")
+    part = input_collector(
+        f'Data line({protocol.BINARY_FORMAT_PREFIX}1010... to send binary): ')
     while part:
         data.append(part)
         part = input_collector("Next line(o): ")
@@ -88,8 +90,10 @@ def _execute_request(config: SocketRequestConfig, udp=False):
         nonlocal keep_sending_flag
         return keep_sending_flag
 
+    logging_target = _execute_catching(
+        socket_protocol.execute_udp if udp else socket_protocol.execute_tcp)
     thread = threading.Thread(
-        target=udp_protocol.execute if udp else tcp_protocol.execute,
+        target=logging_target,
         args=[config.to_protocol_config(keep_sending)],
         daemon=True)
     thread.start()
@@ -98,3 +102,14 @@ def _execute_request(config: SocketRequestConfig, udp=False):
     else:
         thread.join()
     keep_sending_flag = False
+
+
+def _execute_catching(func):
+    def logging_func(f):
+        try:
+            f()
+        except Exception as e:
+            print('Catched!')
+            raise e
+
+    return lambda: logging_func(func)

@@ -1,7 +1,8 @@
 from enum import Enum
+from src.validation.validation import is_valid_binary
 import math
 
-BINARY_FORMAT_PREFIX = 'b'
+BINARY_FORMAT_PREFIX = ':b'
 
 
 class Protocol(Enum):
@@ -12,15 +13,15 @@ class Protocol(Enum):
 
 class SocketRequestConfig:
 
-    def __init__(self, ip, port, rate, data,
-                 timeout, data_consumer, sending_predicate, src_port=None):
+    def __init__(self, ip, port, rate, data_with_format,
+                 timeout, data_consumer, send_predicate, src_port=None):
         self.ip = ip
         self.port = port
         self.rate = rate
-        self.data = data
+        self.data_with_format = data_with_format
         self.timeout = timeout
         self.data_consumer = data_consumer
-        self.sending_predicate = sending_predicate
+        self.send_predicate = send_predicate
         self.src_port = src_port
 
 
@@ -28,7 +29,7 @@ class DataWithFormat:
 
     def __init__(self, str_data):
         self.str_data = str_data
-        self.binary = str_data[0:1] == BINARY_FORMAT_PREFIX
+        self.binary = str_data.find(BINARY_FORMAT_PREFIX) == 0
         self.text = not self.binary
 
     def as_text_bytes(self, encoding):
@@ -36,6 +37,10 @@ class DataWithFormat:
 
     def as_binary_bytes(self):
         binary = self._prepare_binary()
+
+        if not is_valid_binary(binary):
+            raise Exception(f'{binary} is not a valid binary number')
+
         bytes_array = []
         bs_len = len(binary)
 
@@ -59,5 +64,11 @@ class DataWithFormat:
         return bytes(bytes_array)
 
     def _prepare_binary(self):
-        segments = self.str_data[1:].split('\n')
+        segments = self.str_data[len(BINARY_FORMAT_PREFIX):].split('\n')
         return ''.join(segments)
+
+
+def format_bytes(raw_bytes):
+    return ''.join(
+        ['{:08b}'.format(raw_bytes[i]) if i > 0 else '{:b}'.format(raw_bytes[i])
+         for i in range(len(raw_bytes))])
