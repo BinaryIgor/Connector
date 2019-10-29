@@ -40,6 +40,8 @@ def is_positive_number(number):
 
 
 def is_valid_binary(data):
+    if not data:
+        return False
     for d in data:
         if d != '1' and d != '0':
             return False

@@ -52,6 +52,9 @@ class TestValidation(unittest.TestCase):
     def test_invalidates_binary_case2(self):
         self.assertFalse(validation.is_valid_binary('a2bd'))
 
+    def test_invalidates_binary_case3(self):
+        self.assertFalse(validation.is_valid_binary(''))
+
     def test_validates_http_url(self):
         self.assertTrue(validation.is_valid_http_url('http://iprogrammerr.com'))
 

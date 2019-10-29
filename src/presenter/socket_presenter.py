@@ -98,10 +98,12 @@ def _execute_request(config: SocketRequestConfig, on_error, udp=False):
         args=[config.to_protocol_config(keep_sending)],
         daemon=True)
     thread.start()
+
     if config.rate > 0:
-        _ = config.interruption()
+        config.interruption()
     else:
         thread.join()
+
     keep_sending_flag = False
 
 
