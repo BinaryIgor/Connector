@@ -1,6 +1,5 @@
-from src.cli import menu_cli
+from src.cli import menu_cli, error_cli
 import sys
-import traceback
 import signal
 
 
@@ -14,6 +13,5 @@ try:
     menu_cli.show()
 except KeyboardInterrupt:
     sys.exit()
-except Exception as e:
-    print("Something went wrong...")
-    print(e)
+except Exception or BaseException as e:
+    error_cli.handle_error(e)

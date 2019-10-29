@@ -1,5 +1,6 @@
 from src.presenter import socket_presenter
 from src.input.smart_input import smart_input
+from src.cli import error_cli
 
 
 def show(udp=False):
@@ -58,9 +59,9 @@ def _execute(config, udp):
     else:
         print('Received response:')
     if udp:
-        socket_presenter.execute_udp_request(config)
+        socket_presenter.execute_udp_request(config, error_cli.handle_error)
     else:
-        socket_presenter.execute_tcp_request(config)
+        socket_presenter.execute_tcp_request(config, error_cli.handle_error)
     _repeat_or_exit(config, udp)
 
 

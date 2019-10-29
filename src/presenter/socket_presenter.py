@@ -75,23 +75,24 @@ def collect_data(input_collector):
         return PresenterResponse(error="Data can't be empty.")
 
 
-def execute_tcp_request(config: SocketRequestConfig):
-    _execute_request(config, udp=False)
+def execute_tcp_request(config: SocketRequestConfig, on_error):
+    _execute_request(config, on_error, udp=False)
 
 
-def execute_udp_request(config: SocketRequestConfig):
-    _execute_request(config, udp=True)
+def execute_udp_request(config: SocketRequestConfig, on_error):
+    _execute_request(config, on_error, udp=True)
 
 
-def _execute_request(config: SocketRequestConfig, udp=False):
+def _execute_request(config: SocketRequestConfig, on_error, udp=False):
     keep_sending_flag = True
 
     def keep_sending():
         nonlocal keep_sending_flag
         return keep_sending_flag
 
-    logging_target = _execute_catching(
-        socket_protocol.execute_udp if udp else socket_protocol.execute_tcp)
+    logging_target = _catching_func(
+        socket_protocol.execute_udp if udp else socket_protocol.execute_tcp,
+        on_error)
     thread = threading.Thread(
         target=logging_target,
         args=[config.to_protocol_config(keep_sending)],
@@ -104,12 +105,11 @@ def _execute_request(config: SocketRequestConfig, udp=False):
     keep_sending_flag = False
 
 
-def _execute_catching(func):
-    def logging_func(f):
+def _catching_func(func, on_error):
+    def logging_func(f, x):
         try:
-            f()
-        except Exception as e:
-            print('Catched!')
-            raise e
+            f(x)
+        except Exception or BaseException as e:
+            on_error(e)
 
-    return lambda: logging_func(func)
+    return lambda x: logging_func(func, x)
